@@ -1,12 +1,14 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 
 public class ChatClient extends Frame {
 	
 	TextArea contentTA = new TextArea(); // 内容显示文本框
 	TextField inputTF = new TextField(); // 单行文本输入框
+	
+	Socket socket = null;
 
 	public static void main(String[] args) {
 		new ChatClient().launchFrame();
@@ -37,7 +39,7 @@ public class ChatClient extends Frame {
 	
 	public void connect() {
 		try {
-			Socket socket = new Socket("127.0.0.1", 8888);
+			socket = new Socket("127.0.0.1", 8888);
 System.out.println("connected");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -56,6 +58,14 @@ System.out.println("connected");
 			String inputTxt = inputTF.getText().trim(); // 获取输入的文本内容并去除文本两端的空格
 			contentTA.setText(inputTxt); // 设置内容显示框
 			inputTF.setText(""); // 清空文本输入框
+			try {
+				DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+				dataOutputStream.writeUTF(inputTxt);
+				dataOutputStream.flush();
+				dataOutputStream.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 	}
