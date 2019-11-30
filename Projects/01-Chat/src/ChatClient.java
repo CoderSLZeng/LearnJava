@@ -3,8 +3,8 @@ import java.awt.event.*;
 
 public class ChatClient extends Frame {
 	
-	TextArea taContent = new TextArea(); // 多行文本输入框
-	TextField tfTxt = new TextField(); // 单行文本输入框
+	TextArea contentTA = new TextArea(); // 内容显示文本框
+	TextField inputTF = new TextField(); // 单行文本输入框
 
 	public static void main(String[] args) {
 		new ChatClient().launchFrame();
@@ -16,18 +16,34 @@ public class ChatClient extends Frame {
 	private void launchFrame() {
 		setLocation(400, 300); // 窗口坐标位置
 		this.setSize(300, 300); // 窗口大小
-		add(tfTxt, BorderLayout.SOUTH);  // 上北
-		add(taContent, BorderLayout.NORTH); // 下南
+		add(inputTF, BorderLayout.SOUTH);  // 上北
+		add(contentTA, BorderLayout.NORTH); // 下南
 		pack();
 		this.addWindowListener(new WindowAdapter() { // 添加窗口监听事件
 
 			@Override
-			public void windowClosing(WindowEvent e) { // 监听窗口关闭
+			public void windowClosing(WindowEvent e) { // 监听窗口
 				System.exit(0);
 			}
 			
 		});
+		
+		inputTF.addActionListener(new TextFieldActinonListener()); // 给文本输入框添加监听事件
 		setVisible(true); // 显示窗口		
+	}
+	
+	/**
+	 * TextField 事件监听内部类
+	 */
+	private class TextFieldActinonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String inputTxt = inputTF.getText().trim(); // 获取输入的文本内容并去除文本两端的空格
+			contentTA.setText(inputTxt); // 设置内容显示框
+			inputTF.setText(""); // 清空文本输入框
+		}
+		
 	}
 
 }
