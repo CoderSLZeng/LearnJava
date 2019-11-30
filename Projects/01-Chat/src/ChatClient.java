@@ -9,6 +9,7 @@ public class ChatClient extends Frame {
 	TextField inputTF = new TextField(); // 单行文本输入框
 	
 	Socket socket = null;
+	DataOutputStream dataOutputStream = null;
 
 	public static void main(String[] args) {
 		new ChatClient().launchFrame();
@@ -27,6 +28,7 @@ public class ChatClient extends Frame {
 
 			@Override
 			public void windowClosing(WindowEvent e) { // 监听窗口
+				disconnect();
 				System.exit(0);
 			}
 			
@@ -40,10 +42,22 @@ public class ChatClient extends Frame {
 	public void connect() {
 		try {
 			socket = new Socket("127.0.0.1", 8888);
+			dataOutputStream = new DataOutputStream(socket.getOutputStream());
 System.out.println("connected");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void disconnect() {
+
+		try {
+			dataOutputStream.close();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -59,10 +73,8 @@ System.out.println("connected");
 			contentTA.setText(inputTxt); // 设置内容显示框
 			inputTF.setText(""); // 清空文本输入框
 			try {
-				DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 				dataOutputStream.writeUTF(inputTxt);
 				dataOutputStream.flush();
-				dataOutputStream.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
