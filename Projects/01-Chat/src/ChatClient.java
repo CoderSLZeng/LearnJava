@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.*;
 
 public class ChatClient extends Frame {
 	
@@ -30,6 +32,18 @@ public class ChatClient extends Frame {
 		
 		inputTF.addActionListener(new TextFieldActinonListener()); // 给文本输入框添加监听事件
 		setVisible(true); // 显示窗口		
+		connect();
+	}
+	
+	public void connect() {
+		try {
+			Socket socket = new Socket("127.0.0.1", 8888);
+System.out.println("connected");
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
